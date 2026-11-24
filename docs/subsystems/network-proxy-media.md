@@ -45,7 +45,7 @@
 
 ## 主运行时路径
 
-1. `Api::get/post/authed` 调 `edge(origin, method, path, body, token)`。`scope_for()` 按官网路由表将请求分流至 `public` / `dynamic` / `playback` / `user` 四个端点：`public` 优先走 `POST {origin}/api/public/request`（携带 `X-HG-Public-JSON: 1` 且查询参数按键名稳定排序，不发送凭据，遇旧协议 400 自动转加密通道）；`dynamic` / `playback` / `user` 走 `dx150-edge-v1`（ECDH P-256 握手 + HKDF-SHA256 派生 `req`/`res` AES-256-GCM 会话密钥，按 `(origin, scope)` 单飞缓存并在 `session_expired` 时自动重建重试一次；`Authorization` 仅在非 `public` 作用域写入加密包内）。仅当新端点返回 `404`/`405` 时兼容回退旧 `/api/edge/request`。响应要求 `status == 1`，否则取 `msg` 作为错误。
+1. `Api::get/post/authed` 调 `edge(origin, method, path, body, token)`。`scope_for()` 按官网路由表将请求分流至 `public` / `dynamic` / `playback` / `user` 四个端点：`public` 优先走 `POST {origin}/api/public/request`（携带 `X-HG-Public-JSON: 1` 且查询参数按键名稳定排序，不发送凭据，遇旧协议 400 自动转加密通道）；`dynamic` / `playback` / `user` 走 `dx150-edge-v1`（ECDH P-256 握手 + HKDF-SHA256 派生 `req`/`res` AES-256-GCM 会话密钥，按 `(origin, scope)` 单飞缓存并在 `session_expired` 时自动重建重试一次；`Authorization` 仅在非 `public` 作用域写入加密包内）。仅当新端点返回 `404`/`405` 时兼容回退旧 `/api/edge/request`。响应要求 `status == 1`，否则取 `msg` 作为错误。仅 HTTP `401` 折叠成 `"401"`；HTTP `403` 保留 `"HTTP 403..."` 原状态，避免网络切换后的 CDN/WAF 拦截被误报为登录态失效，同时让前端自动选线感知连续 403 并切线。
 2. `with_retry()` 只对逻辑 GET、无 body 的请求重试，最多 3 次；408/425/429/5xx、超时/连接类
    错误可重试，401、404、403、地址策略拒绝和重定向错误一次即终止。重试前 `heal_client()` 会在
    3 秒节流内重建客户端，解决代理软件开关后的 tunnel error。
@@ -81,8 +81,8 @@
   后续失败或过期 → 回到系统解析路径。
 - 代理：`system` 每次建客户端时重新读系统设置；`custom` 用用户保存的地址；`off` 强制
   `no_proxy()`。保存代理会推进线路选择代次，旧探测不能在新代理保存后切换线路。
-- 响应：成功且 `status=1` → 返回 `data`；空 body → `Null`；业务失败 → `msg`；HTTP 401/403 →
-  `"401"`；网络错误 → 保留 source chain 的脱敏文本。
+- 响应：成功且 `status=1` → 返回 `data`；空 body → `Null`；业务失败 → `msg`；HTTP 401 →
+  `"401"`；HTTP 403 → `"HTTP 403..."`；网络错误 → 保留 source chain 的脱敏文本。
 
 ## 约束与失败行为
 

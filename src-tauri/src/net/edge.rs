@@ -207,7 +207,7 @@ pub async fn edge(
                 target_host = reply.target_host;
                 gateway = reply.gateway;
                 response_kind = if reply.ctype.contains("json") { "json" } else if reply.ctype.contains("html") { "html" } else { "other" };
-                if reply.status == 401 || reply.status == 403 {
+                if reply.status == 401 {
                     return Err("401".to_string());
                 }
                 if !(200..300).contains(&reply.status) {
