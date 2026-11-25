@@ -92,7 +92,7 @@ export default function Search({ active, wide }: { active: boolean; wide: boolea
       setHotVideos([]);
       setHotError(null);
     }
-    // 切换主导航时短暂复用榜单；手动刷新或切线路后重新获取官网内容。
+    // Reuse the ranking briefly when switching tabs; refresh it after the short cache expires.
     if (active && (epochChanged || Date.now() - hotLoadedAt.current > 60_000)) void refreshHot(epochChanged);
   }, [active, lineEpoch]);
 
