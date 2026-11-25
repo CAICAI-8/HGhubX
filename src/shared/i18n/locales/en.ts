@@ -825,6 +825,33 @@ const en: Record<string, string> = {
   "播放数": "Plays",
   "评分": "Rating",
   "正在加载全部结果以排序…": "Loading all results to sort…",
+  "热门作者": "Popular authors",
+  "全部作者": "All authors",
+  "全部作者 ›": "All authors ›",
+  "作者": "Authors",
+  "刷新作者": "Refresh authors",
+  "作者加载失败": "Authors failed to load",
+  "作者加载失败，请重试": "Couldn't load authors. Try again.",
+  "暂无作者": "No authors yet",
+  "作者暂未加载成功。": "Authors haven't loaded. ",
+  "刷新失败，保留已加载作者。": "Refresh failed; keeping loaded authors. ",
+  "正在加载作者…": "Loading authors…",
+  "暂无可用作者": "No authors available",
+  "{0} 粉丝": "{0} followers",
+  "{0} 位": "{0}",
+  "已关注作者": "Followed authors",
+  "长按关注作者：{0}": "Long-press to follow author: {0}",
+  "长按取消关注作者：{0}": "Long-press to unfollow author: {0}",
+  "长按下方作者可关注": "Long-press an author below to follow",
+  "长按作者可关注或取消关注": "Long-press an author to follow or unfollow",
+  "{0} 位作者 · {1} 位已关注": "{0} authors · {1} followed",
+  "已取消关注 {0}": "Unfollowed {0}",
+  "作品状态筛选": "Work status filter",
+  "筛选作品状态": "Filter works",
+  "筛选作品状态：{0}": "Filter works: {0}",
 };
 
 export default en;
+
+
+
